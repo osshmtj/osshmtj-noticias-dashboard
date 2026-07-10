@@ -53,6 +53,31 @@
     background: #fff;
   }
   .grid {
+    display: block;
+  }
+  .region-section {
+    margin-bottom: 22px;
+  }
+  .region-header {
+    font-size: 16px;
+    font-weight: 700;
+    color: #1f2430;
+    margin: 0 0 12px 0;
+    padding-bottom: 6px;
+    border-bottom: 2px solid #2a6df5;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .region-badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: #fff;
+    background: #2a6df5;
+    padding: 2px 9px;
+    border-radius: 10px;
+  }
+  .cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
     gap: 16px;
@@ -198,6 +223,7 @@
 const DATA = [
   {
     unit: "OSSHMTJ",
+    region: "Juiz de Fora/MG",
     logo: "logos/logo_osshmtj_alterada.png",
     tags: ["OSSHMTJ", "HMTJ"],
     news: [
@@ -208,6 +234,7 @@ const DATA = [
   },
   {
     unit: "HMTJ — Hospital e Maternidade Therezinha de Jesus (Juiz de Fora/MG)",
+    region: "Juiz de Fora/MG",
     logo: "logos/Logo%20HMTJ%20%20Uniforme.png",
     tags: ["HMTJ"],
     news: [
@@ -220,6 +247,7 @@ const DATA = [
   },
   {
     unit: "Hospital Monte Sinai (HMS)",
+    region: "Juiz de Fora/MG",
     logo: "logos/LOGOTIPO%20HMS%20-%20TIPOGRAFIA_png.png",
     tags: ["Hospital Monte Sinai", "HMS"],
     news: [
@@ -228,23 +256,29 @@ const DATA = [
     note: "Atenção: HMTJ (card acima) já foi identificado como o Hospital e Maternidade Therezinha de Jesus. Este 'Hospital Monte Sinai', também de Juiz de Fora, parece ser uma instituição distinta e não foi confirmado como parte da rede OSSHMTJ."
   },
   {
-    unit: "UPA Sul — Santa Luzia (São José dos Campos)",
+    unit: "UPA Sul — Santa Luzia (Juiz de Fora/MG)",
+    region: "Juiz de Fora/MG",
     logo: "logos/Logo%20UPA%20Santa%20Luzia.png",
     tags: ["UPA SUL", "Santa Luzia"],
-    news: [],
-    note: "Nenhuma notícia específica encontrada para a unidade em São José dos Campos nesta busca. Resultados retornados foram de UPAs 'Santa Luzia' de outras cidades (Juiz de Fora, São Gonçalo)."
+    news: [
+      { title: "Presidente Lula inaugura UPA de Santa Luzia", source: "Portal PJF (Prefeitura de Juiz de Fora)", url: "https://www.pjf.mg.gov.br/noticias/view.php?modo=link2&idnoticia2=23088", date: "18/01/2010", dateStatus: "confirmed", sortKey: "2010-01-18" }
+    ],
+    note: "Unidade gerenciada pelo HMTJ desde a inauguração (2010). Não foram encontradas notícias recentes (2025/2026) específicas sobre esta UPA nesta busca."
   },
   {
-    unit: "UPA Oeste — São Pedro (São José dos Campos)",
+    unit: "UPA Oeste — São Pedro (Juiz de Fora/MG)",
+    region: "Juiz de Fora/MG",
     logo: "logos/Logo%20UPA%20OESTE.png",
     tags: ["UPA OESTE", "São Pedro"],
     news: [
-      { title: "Unidade de Pronto Atendimento (UPA) 24 Horas — Carta de Serviços", source: "Prefeitura de São José dos Campos", url: "https://www.sjc.sp.gov.br/carta-de-servicos/cidadaos/saude/unidades-de-atendimento/unidade-de-pronto-atendimento-upa-24-horas/", date: "Página institucional (sem data)", dateStatus: "unavailable", sortKey: "" }
+      { title: "UPA São Pedro será referência para 250 mil usuários do SUS", source: "Portal PJF (Prefeitura de Juiz de Fora)", url: "https://www.pjf.mg.gov.br/noticias/view.php?modo=link2&idnoticia2=24528", date: "28/05/2010", dateStatus: "confirmed", sortKey: "2010-05-28" },
+      { title: "Fiscaliza JF verifica condições de infraestrutura e atendimento na UPA São Pedro", source: "Câmara Municipal de Juiz de Fora", url: "https://www.camarajf.mg.gov.br/www/noticias/exibir/10208/Fiscaliza-JF-verifica-condicoes-de-infraestrutura-e-atendimento-na-UPA-Sao-Pedro.html?p=378", date: "17/10/2019", dateStatus: "confirmed", sortKey: "2019-10-17" }
     ],
-    note: "Resultado mais específico ('UPA São Pedro') encontrado foi de Juiz de Fora (MG), não de São José dos Campos."
+    note: "Unidade gerenciada pela Fundação HU desde a inauguração (2010), com gestão posteriormente assumida pelo HMTJ. Não foram encontradas notícias recentes (2025/2026) específicas sobre esta UPA nesta busca."
   },
   {
     unit: "UPA Putim (São José dos Campos/SP)",
+    region: "São Paulo",
     logo: "logos/Logo%20UPA%20PUTIM.png",
     tags: ["UPA Putim"],
     news: [
@@ -255,6 +289,7 @@ const DATA = [
   },
   {
     unit: "UBS Parque Industrial (São José dos Campos/SP)",
+    region: "São Paulo",
     logo: "logos/Logo%20UBS%20Parque%20Industrial.png",
     tags: ["UBS Parque Industrial"],
     news: [
@@ -265,6 +300,7 @@ const DATA = [
   },
   {
     unit: "Hospital de Clínicas Sul (HCS) — São José dos Campos",
+    region: "São Paulo",
     logo: "logos/Logo%20HCS_Nova.png",
     tags: ["Hospital de Clínicas Sul", "HCS"],
     news: [
@@ -274,6 +310,7 @@ const DATA = [
   },
   {
     unit: "UMSF Central (Jacareí)",
+    region: "São Paulo",
     logo: "logos/Logo%20Prefeitura%20Jacarei%20UMSF%20CENTRAL%20Horizontal.png",
     tags: ["UMSF Central", "Jacareí"],
     news: [
@@ -284,6 +321,7 @@ const DATA = [
   },
   {
     unit: "UPA Meia Lua (Jacareí)",
+    region: "São Paulo",
     logo: "logos/Logo%20UPA%20Meia%20Lua%20Jacare%C3%AD.png",
     tags: ["UPA Meia Lua"],
     news: [
@@ -294,6 +332,7 @@ const DATA = [
   },
   {
     unit: "HEI — Hospital Estadual de Itumbiara",
+    region: "Goiás",
     logo: "logos/HEI_Abreviada_positivo%20ESTADO%20DE%20GOIAS.png",
     tags: ["HEI"],
     news: [
@@ -305,6 +344,7 @@ const DATA = [
   },
   {
     unit: "HEJA — Hospital Estadual de Jaraguá",
+    region: "Goiás",
     logo: "logos/HEJA_Abreviada_positivo%20ESTADO%20DE%20GOIAS.png",
     tags: ["HEJA"],
     news: [
@@ -316,6 +356,7 @@ const DATA = [
   },
   {
     unit: "HEMU — Hospital Estadual da Mulher",
+    region: "Goiás",
     logo: "logos/HEMU_Abreviada_positivo%20ESTADO%20DE%20GOIAS.png",
     tags: ["HEMU"],
     news: [
@@ -326,6 +367,7 @@ const DATA = [
   },
   {
     unit: "HEAPA — Hospital Estadual de Aparecida de Goiânia",
+    region: "Goiás",
     logo: "logos/Heapa_Abreviada_positivo%20ESTADO%20DE%20GOIAS.png",
     tags: ["HEAPA"],
     news: [
@@ -338,6 +380,7 @@ const DATA = [
   },
   {
     unit: "HEMNSL — Hospital Estadual Maternidade Nossa Senhora de Lourdes",
+    region: "Goiás",
     logo: "logos/HEMNSL_Abreviada_positivo%20ESTADO%20DE%20GOIAS.png",
     tags: ["HEMNSL"],
     news: [
@@ -349,6 +392,7 @@ const DATA = [
   },
   {
     unit: "HEAL — Hospital Estadual de Águas Lindas",
+    region: "Goiás",
     logo: "logos/HEAL_Abreviada_positivo%20ESTADO%20DE%20GOIAS.png",
     tags: ["HEAL"],
     news: [
@@ -365,39 +409,67 @@ function formatDateBadge(item) {
   return `<span class="news-date ${cls}">${item.date}</span>`;
 }
 
+const REGION_ORDER = ["Juiz de Fora/MG", "Goiás", "São Paulo"];
+
+function buildCard(unit) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  const tagsHtml = unit.tags.map(t => `<span class="tag">${t}</span>`).join('');
+  let newsHtml = '';
+  const sortedNews = unit.news.slice().sort((a, b) => {
+    if (a.sortKey && b.sortKey) return b.sortKey.localeCompare(a.sortKey);
+    if (a.sortKey && !b.sortKey) return -1;
+    if (!a.sortKey && b.sortKey) return 1;
+    return 0;
+  });
+  if (sortedNews.length === 0) {
+    newsHtml = `<div class="empty-note">${unit.note || 'Nenhuma notícia encontrada nesta busca.'}</div>`;
+  } else {
+    newsHtml = sortedNews.map(n => `
+      <div class="news-item">
+        <a href="${n.url}" target="_blank" rel="noopener">${n.title}</a>
+        <div class="news-meta">${formatDateBadge(n)}<span>${n.source}</span></div>
+      </div>
+    `).join('');
+    if (unit.note) {
+      newsHtml += `<div class="empty-note">${unit.note}</div>`;
+    }
+  }
+  const logoHtml = unit.logo ? `<img class="unit-logo" src="${unit.logo}" alt="Logo ${unit.unit}">` : '';
+  card.innerHTML = `
+    <div class="card-title">${logoHtml}${unit.unit} ${tagsHtml} <span class="count-badge">${unit.news.length} notícia(s)</span></div>
+    ${newsHtml}
+  `;
+  return card;
+}
+
 function render(list) {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
+
+  const byRegion = {};
   list.forEach(unit => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    const tagsHtml = unit.tags.map(t => `<span class="tag">${t}</span>`).join('');
-    let newsHtml = '';
-    const sortedNews = unit.news.slice().sort((a, b) => {
-      if (a.sortKey && b.sortKey) return b.sortKey.localeCompare(a.sortKey);
-      if (a.sortKey && !b.sortKey) return -1;
-      if (!a.sortKey && b.sortKey) return 1;
-      return 0;
-    });
-    if (sortedNews.length === 0) {
-      newsHtml = `<div class="empty-note">${unit.note || 'Nenhuma notícia encontrada nesta busca.'}</div>`;
-    } else {
-      newsHtml = sortedNews.map(n => `
-        <div class="news-item">
-          <a href="${n.url}" target="_blank" rel="noopener">${n.title}</a>
-          <div class="news-meta">${formatDateBadge(n)}<span>${n.source}</span></div>
-        </div>
-      `).join('');
-      if (unit.note) {
-        newsHtml += `<div class="empty-note">${unit.note}</div>`;
-      }
-    }
-    const logoHtml = unit.logo ? `<img class="unit-logo" src="${unit.logo}" alt="Logo ${unit.unit}">` : '';
-    card.innerHTML = `
-      <div class="card-title">${logoHtml}${unit.unit} ${tagsHtml} <span class="count-badge">${unit.news.length} notícia(s)</span></div>
-      ${newsHtml}
-    `;
-    grid.appendChild(card);
+    const region = unit.region || 'Outras';
+    if (!byRegion[region]) byRegion[region] = [];
+    byRegion[region].push(unit);
+  });
+
+  const orderedRegions = REGION_ORDER.filter(r => byRegion[r] && byRegion[r].length)
+    .concat(Object.keys(byRegion).filter(r => !REGION_ORDER.includes(r)));
+
+  orderedRegions.forEach(region => {
+    const units = byRegion[region];
+    const section = document.createElement('div');
+    section.className = 'region-section';
+    const header = document.createElement('div');
+    header.className = 'region-header';
+    header.innerHTML = `${region} <span class="region-badge">${units.length} unidade(s)</span>`;
+    section.appendChild(header);
+    const cardsGrid = document.createElement('div');
+    cardsGrid.className = 'cards-grid';
+    units.forEach(unit => cardsGrid.appendChild(buildCard(unit)));
+    section.appendChild(cardsGrid);
+    grid.appendChild(section);
   });
 }
 
