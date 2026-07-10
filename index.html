@@ -74,6 +74,12 @@
     gap: 8px;
     flex-wrap: wrap;
   }
+  .unit-logo {
+    height: 26px;
+    max-width: 90px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
   .tag {
     font-size: 10px;
     font-weight: 700;
@@ -192,6 +198,7 @@
 const DATA = [
   {
     unit: "OSSHMTJ",
+    logo: "logos/logo_osshmtj_alterada.png",
     tags: ["OSSHMTJ", "HMTJ"],
     news: [
       { title: "Debate sobre a situação de trabalhadores da saúde em OSSs reúne autoridades na Alego", source: "Portal da Alego", url: "https://portal.al.go.leg.br/noticias/155340/debate-sobre-a-situacao-de-trabalhadores-da-saude-em-osss-reune-diversas-autoridades-na-alego-nesta-segunda-feira-2", date: "02/06/2025", dateStatus: "confirmed", sortKey: "2025-06-02" },
@@ -201,6 +208,7 @@ const DATA = [
   },
   {
     unit: "HMTJ — Hospital e Maternidade Therezinha de Jesus (Juiz de Fora/MG)",
+    logo: "logos/Logo%20HMTJ%20%20Uniforme.png",
     tags: ["HMTJ"],
     news: [
       { title: "Hepatite A em Juiz de Fora: 2ª morte é confirmada e casos caem", source: "Plox", url: "https://plox.com.br/noticia/26/05/2026/morte-associada-hepatite-a-juiz-fora", date: "26/05/2026", dateStatus: "confirmed", sortKey: "2026-05-26" },
@@ -212,6 +220,7 @@ const DATA = [
   },
   {
     unit: "Hospital Monte Sinai (HMS)",
+    logo: "logos/LOGOTIPO%20HMS%20-%20TIPOGRAFIA_png.png",
     tags: ["Hospital Monte Sinai", "HMS"],
     news: [
       { title: "Hospital Monte Sinai Juiz de Fora — publicações institucionais (LinkedIn)", source: "LinkedIn", url: "https://www.linkedin.com/posts/hospital-monte-sinai-juiz-de-fora_congresso-seguran%C3%A7adopaciente-hospitalmontesinai-activity-6987813901161644032-J_R1", date: "Data não disponível", dateStatus: "unavailable", sortKey: "" }
@@ -220,12 +229,14 @@ const DATA = [
   },
   {
     unit: "UPA Sul — Santa Luzia (São José dos Campos)",
+    logo: "logos/Logo%20UPA%20Santa%20Luzia.png",
     tags: ["UPA SUL", "Santa Luzia"],
     news: [],
     note: "Nenhuma notícia específica encontrada para a unidade em São José dos Campos nesta busca. Resultados retornados foram de UPAs 'Santa Luzia' de outras cidades (Juiz de Fora, São Gonçalo)."
   },
   {
     unit: "UPA Oeste — São Pedro (São José dos Campos)",
+    logo: "logos/Logo%20UPA%20OESTE.png",
     tags: ["UPA OESTE", "São Pedro"],
     news: [
       { title: "Unidade de Pronto Atendimento (UPA) 24 Horas — Carta de Serviços", source: "Prefeitura de São José dos Campos", url: "https://www.sjc.sp.gov.br/carta-de-servicos/cidadaos/saude/unidades-de-atendimento/unidade-de-pronto-atendimento-upa-24-horas/", date: "Página institucional (sem data)", dateStatus: "unavailable", sortKey: "" }
@@ -234,6 +245,7 @@ const DATA = [
   },
   {
     unit: "UBS Parque Industrial (São José dos Campos/SP)",
+    logo: "logos/Logo%20UBS%20Parque%20Industrial.png",
     tags: ["UBS Parque Industrial"],
     news: [
       { title: "UBS Parque Industrial leva vacinação contra gripe à Asin", source: "Prefeitura de São José dos Campos", url: "https://www.sjc.sp.gov.br/noticias/2026/junho/15/ubs-parque-industrial-leva-vacinacao-contra-gripe-a-asin/", date: "15/06/2026", dateStatus: "confirmed", sortKey: "2026-06-15" },
@@ -243,6 +255,7 @@ const DATA = [
   },
   {
     unit: "Hospital de Clínicas Sul (HCS) — São José dos Campos",
+    logo: "logos/Logo%20HCS_Nova.png",
     tags: ["Hospital de Clínicas Sul", "HCS"],
     news: [
       { title: "Reforma otimiza atendimento no Hospital de Clínicas Sul", source: "Prefeitura de São José dos Campos", url: "https://www.sjc.sp.gov.br/noticias/2024/marco/25/reforma-otimiza-atendimento-no-hospital-de-clinicas-sul/", date: "25/03/2024", dateStatus: "confirmed", sortKey: "2024-03-25" },
@@ -251,6 +264,7 @@ const DATA = [
   },
   {
     unit: "UMSF Central (Jacareí)",
+    logo: "logos/Logo%20Prefeitura%20Jacarei%20UMSF%20CENTRAL%20Horizontal.png",
     tags: ["UMSF Central", "Jacareí"],
     news: [
       { title: "UMSF Central de Jacareí passa a atender normalmente a partir de 1º de julho", source: "Prefeitura de Jacareí", url: "https://www.jacarei.sp.gov.br/umsf-central-de-jacarei-passa-a-atender-normalmente-a-partir-de-1o-de-julho/", date: "24/06/2024 (publicação); início do atendimento em 01/07/2024", dateStatus: "confirmed", sortKey: "2024-06-24" },
@@ -260,6 +274,7 @@ const DATA = [
   },
   {
     unit: "UPA Meia Lua (Jacareí)",
+    logo: "logos/Logo%20UPA%20Meia%20Lua%20Jacare%C3%AD.png",
     tags: ["UPA Meia Lua"],
     news: [
       { title: "Vereador questiona prefeito sobre demora no atendimento na UPA do Parque Meia Lua", source: "Câmara de Jacareí", url: "https://www.jacarei.sp.leg.br/geral/valmir-questiona-prefeito-sobre-demora-no-atendimento-na-upa-do-parque-meia-lua/", date: "Data não disponível", dateStatus: "unavailable", sortKey: "" },
@@ -269,6 +284,7 @@ const DATA = [
   },
   {
     unit: "HEI — Hospital Estadual de Itumbiara",
+    logo: "logos/HEI_Abreviada_positivo%20ESTADO%20DE%20GOIAS.png",
     tags: ["HEI"],
     news: [
       { title: "Hospital de Itumbiara realiza primeira captação para doação de órgão", source: "Prefeitura de Itumbiara", url: "https://itumbiara.go.gov.br/hospital-de-itumbiara-realiza-primeira-captacao-para-doacao-de-orgao/", date: "05/06/2026", dateStatus: "confirmed", sortKey: "2026-06-05" },
@@ -279,6 +295,7 @@ const DATA = [
   },
   {
     unit: "HEJA — Hospital Estadual de Jaraguá",
+    logo: "logos/HEJA_Abreviada_positivo%20ESTADO%20DE%20GOIAS.png",
     tags: ["HEJA"],
     news: [
       { title: "Daniel Vilela autoriza obra de R$ 100 milhões para quase dobrar a capacidade do Hospital Estadual de Jaraguá", source: "De Minuto a Minuto", url: "https://www.deminutoaminuto.com.br/2026/07/01/daniel-vilela-autoriza-obra-de-r-100-milhoes-para-quase-dobrar-a-capacidade-do-hospital-estadual-de-jaragua/", date: "01/07/2026", dateStatus: "confirmed", sortKey: "2026-07-01" },
@@ -289,6 +306,7 @@ const DATA = [
   },
   {
     unit: "HEMU — Hospital Estadual da Mulher",
+    logo: "logos/HEMU_Abreviada_positivo%20ESTADO%20DE%20GOIAS.png",
     tags: ["HEMU"],
     news: [
       { title: "Hospital Estadual da Mulher abre processo seletivo para diversas áreas", source: "Secretaria da Saúde de Goiás", url: "https://goias.gov.br/saude/hospital-estadual-da-mulher-abre-processo-seletivo-para-diversas-areas/", date: "~10/2025 (estimada — inscrições até 19/10/2025)", dateStatus: "estimated", sortKey: "2025-10-01" },
@@ -298,6 +316,7 @@ const DATA = [
   },
   {
     unit: "HEAPA — Hospital Estadual de Aparecida de Goiânia",
+    logo: "logos/Heapa_Abreviada_positivo%20ESTADO%20DE%20GOIAS.png",
     tags: ["HEAPA"],
     news: [
       { title: "Daniel Vilela anuncia ampliação histórica do Heapa com investimento de R$ 150 milhões", source: "Diário de Aparecida", url: "https://www.diariodeaparecida.com.br/2026/07/03/daniel-vilela-anuncia-ampliacao-historica-do-heapa-com-investimento-de-r-150-milhoes/", date: "03/07/2026", dateStatus: "confirmed", sortKey: "2026-07-03" },
@@ -309,6 +328,7 @@ const DATA = [
   },
   {
     unit: "HEMNSL — Hospital Estadual Maternidade Nossa Senhora de Lourdes",
+    logo: "logos/HEMNSL_Abreviada_positivo%20ESTADO%20DE%20GOIAS.png",
     tags: ["HEMNSL"],
     news: [
       { title: "HEMNSL realiza primeiro Arraiá na UCIN para recém-nascidos internados", source: "Falando a Verdade", url: "https://falandoaverdade.com.br/2026/07/03/hemnsl-realiza-primeiro-arraia-na-ucin-para-recem-nascidos-internados/", date: "03/07/2026", dateStatus: "confirmed", sortKey: "2026-07-03" },
@@ -319,6 +339,7 @@ const DATA = [
   },
   {
     unit: "HEAL — Hospital Estadual de Águas Lindas",
+    logo: "logos/HEAL_Abreviada_positivo%20ESTADO%20DE%20GOIAS.png",
     tags: ["HEAL"],
     news: [
       { title: "HEAL promove semana de acolhimento com campanha \"O que Importa para Você?\"", source: "Falando a Verdade", url: "https://falandoaverdade.com.br/2026/07/06/heal-promove-semana-de-acolhimento-com-campanha-o-que-importa-para-voce/", date: "06/07/2026", dateStatus: "confirmed", sortKey: "2026-07-06" },
@@ -361,36 +382,4 @@ function render(list) {
         newsHtml += `<div class="empty-note">${unit.note}</div>`;
       }
     }
-    card.innerHTML = `
-      <div class="card-title">${unit.unit} ${tagsHtml} <span class="count-badge">${unit.news.length} notícia(s)</span></div>
-      ${newsHtml}
-    `;
-    grid.appendChild(card);
-  });
-}
-
-function applyFilters() {
-  const q = document.getElementById('searchBox').value.toLowerCase();
-  const sortBy = document.getElementById('sortSelect').value;
-  let filtered = DATA.filter(unit => {
-    if (!q) return true;
-    const haystack = (unit.unit + ' ' + unit.tags.join(' ') + ' ' + unit.news.map(n => n.title).join(' ')).toLowerCase();
-    return haystack.includes(q);
-  });
-  filtered = filtered.slice().sort((a, b) => {
-    if (sortBy === 'count') return b.news.length - a.news.length;
-    return a.unit.localeCompare(b.unit, 'pt-BR');
-  });
-  render(filtered);
-}
-
-document.getElementById('searchBox').addEventListener('input', applyFilters);
-document.getElementById('sortSelect').addEventListener('change', applyFilters);
-
-document.getElementById('lastUpdated').textContent = 'Última atualização: 10/07/2026 (manhã)';
-
-applyFilters();
-</script>
-
-</body>
-</html>
+    const logoHtml = unit.logo ? `<img class="unit-logo" src="${unit.logo}" alt="Logo 
