@@ -382,4 +382,37 @@ function render(list) {
         newsHtml += `<div class="empty-note">${unit.note}</div>`;
       }
     }
-    const logoHtml = unit.logo ? `<img class="unit-logo" src="${unit.logo}" alt="Logo 
+    const logoHtml = unit.logo ? `<img class="unit-logo" src="${unit.logo}" alt="Logo ${unit.unit}">` : '';
+    card.innerHTML = `
+      <div class="card-title">${logoHtml}${unit.unit} ${tagsHtml} <span class="count-badge">${unit.news.length} notícia(s)</span></div>
+      ${newsHtml}
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function applyFilters() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  const sortBy = document.getElementById('sortSelect').value;
+  let filtered = DATA.filter(unit => {
+    if (!q) return true;
+    const haystack = (unit.unit + ' ' + unit.tags.join(' ') + ' ' + unit.news.map(n => n.title).join(' ')).toLowerCase();
+    return haystack.includes(q);
+  });
+  filtered = filtered.slice().sort((a, b) => {
+    if (sortBy === 'count') return b.news.length - a.news.length;
+    return a.unit.localeCompare(b.unit, 'pt-BR');
+  });
+  render(filtered);
+}
+
+document.getElementById('searchBox').addEventListener('input', applyFilters);
+document.getElementById('sortSelect').addEventListener('change', applyFilters);
+
+document.getElementById('lastUpdated').textContent = 'Última atualização: 10/07/2026 (manhã)';
+
+applyFilters();
+</script>
+
+</body>
+</html>
