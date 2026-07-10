@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<style>
+  :root { color-scheme: light; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f7f8fa;
+    color: #1f2430;
+    padding: 24px;
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  h1 { font-size: 22px; margin: 0 0 4px 0; }
+  .subtitle { color: #5b6270; font-size: 13px; }
+  .meta {
+    font-size: 12px;
+    color: #7a8194;
+    background: #fff;
+    border: 1px solid #e3e5eb;
+    border-radius: 8px;
+    padding: 8px 12px;
+    white-space: nowrap;
+  }
+  .controls {
+    margin-bottom: 18px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  input[type="text"] {
+    flex: 1;
+    min-width: 220px;
+    padding: 9px 12px;
+    border: 1px solid #d7dae1;
+    border-radius: 8px;
+    font-size: 14px;
+  }
+  select {
+    padding: 9px 12px;
+    border: 1px solid #d7dae1;
+    border-radius: 8px;
+    font-size: 13px;
+    background: #fff;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #e3e5eb;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: #2a6df5;
+    background: #eaf1ff;
+    padding: 2px 7px;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+  }
+  .news-item {
+    border-top: 1px solid #eef0f4;
+    padding-top: 8px;
+  }
+  .news-item:first-of-type { border-top: none; padding-top: 0; }
+  .news-item a {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #1f2430;
+    text-decoration: none;
+    line-height: 1.35;
+  }
+  .news-item a:hover { color: #2a6df5; text-decoration: underline; }
+  .news-meta {
+    font-size: 11px;
+    color: #8a90a0;
+    margin-top: 3px;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .news-date {
+    font-weight: 600;
+    color: #3a7d3f;
+    background: #eaf7ec;
+    padding: 1px 6px;
+    border-radius: 5px;
+  }
+  .news-date.unconfirmed {
+    color: #9a7a1f;
+    background: #fbf3df;
+  }
+  .news-date.unavailable {
+    color: #9aa0ad;
+    background: #f1f2f5;
+    font-weight: 500;
+  }
+  .empty-note {
+    font-size: 12.5px;
+    color: #9aa0ad;
+    font-style: italic;
+  }
+  .count-badge {
+    margin-left: auto;
+    font-size: 11px;
+    color: #5b6270;
+    background: #f1f2f5;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .legend {
+    font-size: 11px;
+    color: #7a8194;
+    margin-bottom: 14px;
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .legend span.dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 4px;
+  }
+  footer {
+    margin-top: 24px;
+    font-size: 11.5px;
+    color: #9aa0ad;
+    text-align: center;
+  }
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div>
+    <h1>Monitor de Notícias — Unidades OSSHMTJ</h1>
+    <div class="subtitle">Notícias públicas encontradas na web para cada unidade gerenciada pela OSSHMTJ (HMTJ)</div>
+  </div>
+  <div class="meta" id="lastUpdated"></div>
+</div>
+
+<div class="legend">
+  <span><span class="dot" style="background:#3a7d3f"></span>Data confirmada na matéria/URL</span>
+  <span><span class="dot" style="background:#9a7a1f"></span>Data estimada (não confirmada na fonte)</span>
+  <span><span class="dot" style="background:#9aa0ad"></span>Data não disponível</span>
+</div>
+
+<div class="controls">
+  <input type="text" id="searchBox" placeholder="Filtrar por unidade, sigla ou palavra-chave da notícia...">
+  <select id="sortSelect">
+    <option value="name">Ordenar: Nome da unidade</option>
+    <option value="count">Ordenar: Mais notícias primeiro</option>
+  </select>
+</div>
+
+<div class="grid" id="grid"></div>
+
+<footer>Dashboard atualizado automaticamente todos os dias de manhã via tarefa agendada. Os links abrem as matérias originais nas fontes. Datas confirmadas via metadados/URL da própria matéria; datas estimadas foram inferidas do conteúdo da notícia.</footer>
+
+<script>
+// dateSortKey: YYYY-MM-DD (ou "" quando não disponível) usado só para ordenação interna
+const DATA = [
+  {
+    unit: "OSSHMTJ",
+    tags: ["OSSHMTJ", "HMTJ"],
+    news: [
+      { title: "Debate sobre a situação de trabalhadores da saúde em OSSs reúne autoridades na Alego", source: "Portal da Alego", url: "https://portal.al.go.leg.br/noticias/155340/debate-sobre-a-situacao-de-trabalhadores-da-saude-em-osss-reune-diversas-autoridades-na-alego-nesta-segunda-feira-2", date: "02/06/2025", dateStatus: "confirmed", sortKey: "2025-06-02" },
+      { title: "Dificuldades em unidades de saúde geridas por OS estão na pauta de audiência", source: "Portal da Alego", url: "https://portal.al.go.leg.br/noticias/155302/dificuldades-em-unidades-de-saude-geridas-por-os-estao-na-pauta-de-audiencia-na-2-feira-2", date: "30/05/2025", dateStatus: "confirmed", sortKey: "2025-05-30" },
+      { title: "Profissionais da saúde criticam OSs em Goiás", source: "Entrelinhas Goiás", url: "https://www.entrelinhasgoias.com.br/profissionais-da-saude-criticam-oss-em-goias/", date: "Data não disponível", dateStatus: "unavailable", sortKey: "" }
+    ]
+  },
+  {
+    unit: "Hospital Monte Sinai (HMS)",
+    tags: ["Hospital Monte Sinai", "HMS"],
+    news: [
+      { title: "Hospital Monte Sinai Juiz de Fora — publicações institucionais (LinkedIn)", source: "LinkedIn", url: "https://www.linkedin.com/posts/hospital-monte-sinai-juiz-de-fora_congresso-seguran%C3%A7adopaciente-hospitalmontesinai-activity-6987813901161644032-J_R1", date: "Data não disponível", dateStatus: "unavailable", sortKey: "" }
+    ],
+    note: "Atenção: as buscas retornam majoritariamente o Hospital Monte Sinai de Juiz de Fora (MG), que pode ser uma instituição distinta da unidade gerenciada pela OSSHMTJ. Vale confirmar o nome oficial/cidade da unidade para refinar a busca."
+  },
+  {
+    unit: "UPA Sul — Santa Luzia (São José dos Campos)",
+    tags: ["UPA SUL", "Santa Luzia"],
+    news: [],
+    note: "Nenhuma notícia específica encontrada para a unidade em São José dos Campos nesta busca. Resultados retornados foram de UPAs 'Santa Luzia' de outras cidades (Juiz de Fora, São Gonçalo)."
+  },
+  {
+    unit: "UPA Oeste — São Pedro (São José dos Campos)",
+    tags: ["UPA OESTE", "São Pedro"],
+    news: [
+      { title: "Unidade de Pronto Atendimento (UPA) 24 Horas — Carta de Serviços", source: "Prefeitura de São José dos Campos", url: "https://www.sjc.sp.gov.br/carta-de-servicos/cidadaos/saude/unidades-de-atendimento/unidade-de-pronto-atendimento-upa-24-horas/", date: "Página institucional (sem data)", dateStatus: "unavailable", sortKey: "" }
+    ],
+    note: "Resultado mais específico ('UPA São Pedro') encontrado foi de Juiz de Fora (MG), não de São José dos Campos."
+  },
+  {
+    unit: "UBS Parque Industrial (São José dos Campos/SP)",
+    tags: ["UBS Parque Industrial"],
+    news: [
+      { title: "UBS Parque Industrial leva vacinação contra gripe à Asin", source: "Prefeitura de São José dos Campos", url: "https://www.sjc.sp.gov.br/noticias/2026/junho/15/ubs-parque-industrial-leva-vacinacao-contra-gripe-a-asin/", date: "15/06/2026", dateStatus: "confirmed", sortKey: "2026-06-15" },
+      { title: "UBS Parque Industrial promove conscientização sobre autismo", source: "Prefeitura de São José dos Campos", url: "https://www.sjc.sp.gov.br/noticias/2026/abril/28/ubs-parque-industrial-promove-conscientizacao-sobre-autismo/", date: "28/04/2026", dateStatus: "confirmed", sortKey: "2026-04-28" },
+      { title: "UBS Parque Industrial promove ação de conscientização sobre autismo", source: "Portal Vale do Paraíba", url: "https://portalvaledoparaiba.com.br/noticia/5963/ubs-parque-industrial-promove-acao-de-conscientizacao-sobre-autismo-em-sao-jose-dos-campos", date: "~28/04/2026 (estimada)", dateStatus: "estimated", sortKey: "2026-04-28" }
+    ]
+  },
+  {
+    unit: "Hospital de Clínicas Sul (HCS) — São José dos Campos",
+    tags: ["Hospital de Clínicas Sul", "HCS"],
+    news: [
+      { title: "Reforma otimiza atendimento no Hospital de Clínicas Sul", source: "Prefeitura de São José dos Campos", url: "https://www.sjc.sp.gov.br/noticias/2024/marco/25/reforma-otimiza-atendimento-no-hospital-de-clinicas-sul/", date: "25/03/2024", dateStatus: "confirmed", sortKey: "2024-03-25" },
+      { title: "Hospital de Clínicas Sul — Carta de Serviços", source: "Prefeitura de São José dos Campos", url: "https://www.sjc.sp.gov.br/carta-de-servicos/cidadaos/saude/unidades-de-atendimento/hospital-de-clinicas-sul/", date: "Página institucional (sem data)", dateStatus: "unavailable", sortKey: "" }
+    ]
+  },
+  {
+    unit: "UMSF Central (Jacareí)",
+    tags: ["UMSF Central", "Jacareí"],
+    news: [
+      { title: "UMSF Central de Jacareí passa a atender normalmente a partir de 1º de julho", source: "Prefeitura de Jacareí", url: "https://www.jacarei.sp.gov.br/umsf-central-de-jacarei-passa-a-atender-normalmente-a-partir-de-1o-de-julho/", date: "24/06/2024 (publicação); início do atendimento em 01/07/2024", dateStatus: "confirmed", sortKey: "2024-06-24" },
+      { title: "Prefeitura reabre UMSF Central em julho para atendimentos de rotina", source: "Diário de Jacareí", url: "https://diariodejacarei.com.br/cidade/prefeitura-reabre-umsf-central-em-julho-para-atendimentos-de-rotina", date: "~06/2024 (estimada)", dateStatus: "estimated", sortKey: "2024-06-01" },
+      { title: "Prefeitura de Jacareí inaugura UMSF Central e do Parque Meia-Lua", source: "Prefeitura de Jacareí", url: "https://www.jacarei.sp.gov.br/prefeitura-de-jacarei-inaugura-umsf-central-e-do-parque-meia-lua-atendimento-ao-publico-teve-inicio-nesta-segunda-1o/", date: "Data não disponível", dateStatus: "unavailable", sortKey: "" }
+    ]
+  },
+  {
+    unit: "UPA Meia Lua (Jacareí)",
+    tags: ["UPA Meia Lua"],
+    news: [
+      { title: "Vereador questiona prefeito sobre demora no atendimento na UPA do Parque Meia Lua", source: "Câmara de Jacareí", url: "https://www.jacarei.sp.leg.br/geral/valmir-questiona-prefeito-sobre-demora-no-atendimento-na-upa-do-parque-meia-lua/", date: "Data não disponível", dateStatus: "unavailable", sortKey: "" },
+      { title: "UPA do Parque Meia-Lua recebeu novos equipamentos para a área da saúde", source: "Facebook", url: "https://www.facebook.com/leticiaaguiaroficial/posts/a-upa-do-parque-meia-lua-recebeu-novos-equipamentos-para-a-%C3%A1rea-da-sa%C3%BAde-um-refo/1453121992840622/", date: "Data não disponível", dateStatus: "unavailable", sortKey: "" },
+      { title: "Unidade de Pronto Atendimento — Meia Lua Jacareí (página oficial HMTJ)", source: "hmtj.org.br", url: "https://hmtj.org.br/unidades-upa-meia-lua-jacarei/", date: "Página institucional (sem data)", dateStatus: "unavailable", sortKey: "" }
+    ]
+  },
+  {
+    unit: "HEI — Hospital Estadual de Itumbiara",
+    tags: ["HEI"],
+    news: [
+      { title: "Hospital de Itumbiara realiza primeira captação para doação de órgão", source: "Prefeitura de Itumbiara", url: "https://itumbiara.go.gov.br/hospital-de-itumbiara-realiza-primeira-captacao-para-doacao-de-orgao/", date: "05/06/2026", dateStatus: "confirmed", sortKey: "2026-06-05" },
+      { title: "HEI participa de imersão do projeto Integração Hospitalar", source: "Falando a Verdade", url: "https://falandoaverdade.com.br/2026/05/20/hei-participa-de-imersao-do-projeto-integracao-hospitalar/", date: "20/05/2026", dateStatus: "confirmed", sortKey: "2026-05-20" },
+      { title: "HEI é referência em controle de infecção hospitalar", source: "Falando a Verdade", url: "https://falandoaverdade.com.br/2026/04/15/hei-e-referencia-em-controle-de-infeccao-hospitalar/", date: "15/04/2026", dateStatus: "confirmed", sortKey: "2026-04-15" },
+      { title: "Hospital Estadual de Itumbiara oferece atendimento oncológico humanizado e integral", source: "Secretaria da Saúde de Goiás", url: "https://goias.gov.br/saude/hospital-estadual-de-itumbiara-oferece-atendimento-oncologico-humanizado-e-integral/", date: "Data não disponível", dateStatus: "unavailable", sortKey: "" }
+    ]
+  },
+  {
+    unit: "HEJA — Hospital Estadual de Jaraguá",
+    tags: ["HEJA"],
+    news: [
+      { title: "Daniel Vilela autoriza obra de R$ 100 milhões para quase dobrar a capacidade do Hospital Estadual de Jaraguá", source: "De Minuto a Minuto", url: "https://www.deminutoaminuto.com.br/2026/07/01/daniel-vilela-autoriza-obra-de-r-100-milhoes-para-quase-dobrar-a-capacidade-do-hospital-estadual-de-jaragua/", date: "01/07/2026", dateStatus: "confirmed", sortKey: "2026-07-01" },
+      { title: "Hospital Estadual de Jaraguá será ampliado e vai quase dobrar atendimentos", source: "Diário de Goiás", url: "https://diariodegoias.com.br/hospital-estadual-de-jaragua-sera-ampliado-e-vai-quase-dobrar-atendimentos/538962/", date: "~01/07/2026 (estimada)", dateStatus: "estimated", sortKey: "2026-07-01" },
+      { title: "\"O que importa para você?\" transforma rotina do HEJA em dois dias de acolhimento", source: "Falando a Verdade", url: "https://falandoaverdade.com.br/2026/06/25/o-que-importa-para-voce-transforma-rotina-do-heja-em-dois-dias-de-acolhimento/", date: "25/06/2026", dateStatus: "confirmed", sortKey: "2026-06-25" },
+      { title: "Nota Oficial do Hospital Estadual de Jaraguá (HEJA)", source: "Secretaria da Saúde de Goiás", url: "https://goias.gov.br/saude/nota-oficial-do-hospital-estadual-de-jaragua-heja/", date: "Data não disponível", dateStatus: "unavailable", sortKey: "" }
+    ]
+  },
+  {
+    unit: "HEMU — Hospital Estadual da Mulher",
+    tags: ["HEMU"],
+    news: [
+      { title: "Hospital Estadual da Mulher abre processo seletivo para diversas áreas", source: "Secretaria da Saúde de Goiás", url: "https://goias.gov.br/saude/hospital-estadual-da-mulher-abre-processo-seletivo-para-diversas-areas/", date: "~10/2025 (estimada — inscrições até 19/10/2025)", dateStatus: "estimated", sortKey: "2025-10-01" },
+      { title: "SGP repudia condições precárias do HEMU", source: "SBP Goiás", url: "https://www.sbp.com.br/filiada/goias/noticias/noticia/nid/sgp-repudia-condicoes-precarias-do-hemu/", date: "~02/2023 (estimada)", dateStatus: "estimated", sortKey: "2023-02-01" }
+    ],
+    note: "Duas notícias em goias.gov.br não puderam ser reabertas nesta checagem: o portal está com publicação de notícias suspensa por período eleitoral."
+  },
+  {
+    unit: "HEAPA — Hospital Estadual de Aparecida de Goiânia",
+    tags: ["HEAPA"],
+    news: [
+      { title: "Daniel Vilela anuncia ampliação histórica do Heapa com investimento de R$ 150 milhões", source: "Diário de Aparecida", url: "https://www.diariodeaparecida.com.br/2026/07/03/daniel-vilela-anuncia-ampliacao-historica-do-heapa-com-investimento-de-r-150-milhoes/", date: "03/07/2026", dateStatus: "confirmed", sortKey: "2026-07-03" },
+      { title: "Reforma do Heapa vai ampliar atendimento com aumento de 71 para 124 leitos", source: "Folha Z", url: "https://folhaz.com.br/noticias/reforma-do-heapa-vai-ampliar-atendimento-com-aumento-de-71-para-124-leitos-a/", date: "~03/07/2026 (estimada)", dateStatus: "estimated", sortKey: "2026-07-03" },
+      { title: "Prefeito Vilela e secretário vistoriam Hospital Estadual de Aparecida após incêndio", source: "Prefeitura de Aparecida de Goiânia", url: "https://aparecida.go.gov.br/prefeito-vilela-e-secretario-rasivel-santos-vistoriam-hospital-estadual-de-aparecida-apos-incendio", date: "04/02/2025", dateStatus: "confirmed", sortKey: "2025-02-04" },
+      { title: "Hospital Estadual de Aparecida de Goiânia realiza primeira captação múltipla de órgãos", source: "Secretaria da Saúde de Goiás", url: "https://goias.gov.br/saude/hospital-estadual-de-aparecida-de-goiania-realiza-primeira-captacao-multipla-de-orgaos/", date: "Data não disponível", dateStatus: "unavailable", sortKey: "" }
+    ],
+    note: "O portal goias.gov.br está com publicação de notícias suspensa por período eleitoral, o que impediu confirmar a data original de uma das matérias."
+  },
+  {
+    unit: "HEMNSL — Hospital Estadual Maternidade Nossa Senhora de Lourdes",
+    tags: ["HEMNSL"],
+    news: [
+      { title: "HEMNSL realiza primeiro Arraiá na UCIN para recém-nascidos internados", source: "Falando a Verdade", url: "https://falandoaverdade.com.br/2026/07/03/hemnsl-realiza-primeiro-arraia-na-ucin-para-recem-nascidos-internados/", date: "03/07/2026", dateStatus: "confirmed", sortKey: "2026-07-03" },
+      { title: "HEMNSL promove Semana \"O que importa pra você\"", source: "Falando a Verdade", url: "https://falandoaverdade.com.br/2026/06/25/hemnsl-promove-semana-o-que-importa-pra-voce/", date: "25/06/2026", dateStatus: "confirmed", sortKey: "2026-06-25" },
+      { title: "Elogios de usuários reconhecem qualidade do atendimento no HEMNSL", source: "Falando a Verdade", url: "https://falandoaverdade.com.br/2026/06/16/elogios-de-usuarios-reconhecem-qualidade-do-atendimento-no-hemnsl/", date: "16/06/2026", dateStatus: "confirmed", sortKey: "2026-06-16" },
+      { title: "Maternidade Nossa Senhora de Lourdes registra 93% de satisfação dos usuários", source: "Agência Cora Coralina de Notícias", url: "https://agenciacoradenoticias.go.gov.br/materias-especiais/maternidade-nossa-senhora-de-lourdes-registra-93-de-satisfacao-dos-usuarios/", date: "Data não disponível", dateStatus: "unavailable", sortKey: "" }
+    ]
+  },
+  {
+    unit: "HEAL — Hospital Estadual de Águas Lindas",
+    tags: ["HEAL"],
+    news: [
+      { title: "HEAL promove semana de acolhimento com campanha \"O que Importa para Você?\"", source: "Falando a Verdade", url: "https://falandoaverdade.com.br/2026/07/06/heal-promove-semana-de-acolhimento-com-campanha-o-que-importa-para-voce/", date: "06/07/2026", dateStatus: "confirmed", sortKey: "2026-07-06" },
+      { title: "Prefeitura de Águas Lindas visita Hospital Estadual HEAL e destaca avanços na saúde pública", source: "Jornal Águas Lindas", url: "https://jornalaguaslindas.com.br/%F0%9F%8F%A5-prefeitura-de-aguas-lindas-visita-hospital-estadual-heal-e-destaca-avancos-na-saude-publica/", date: "~06/2026 (estimada)", dateStatus: "estimated", sortKey: "2026-06-15" },
+      { title: "No 1º ano, HEAL contabiliza mais de 200 mil atendimentos", source: "Portal Serra Dourada News", url: "https://sdnews.com.br/noticia/13122/no-1%C2%BA-ano-do-hospital-estadual-de-aguas-lindas-ronaldo-ramos-caiado-filho-heal-contabiliza-mais-de-2.html", date: "17/06/2025", dateStatus: "confirmed", sortKey: "2025-06-17" },
+      { title: "Hospital Estadual de Águas Lindas realiza mais de 5,7 mil atendimentos no primeiro mês", source: "Secretaria da Saúde de Goiás", url: "https://goias.gov.br/saude/hospital-estadual-de-aguas-lindas-realiza-mais-de-57-mil-atendimentos-no-primeiro-mes-de-funcionamento/", date: "~07/2024 (estimada — hospital inaugurado em 17/06/2024)", dateStatus: "estimated", sortKey: "2024-07-01" }
+    ]
+  }
+];
+
+function formatDateBadge(item) {
+  const cls = item.dateStatus === "confirmed" ? "" : item.dateStatus === "estimated" ? "unconfirmed" : "unavailable";
+  return `<span class="news-date ${cls}">${item.date}</span>`;
+}
+
+function render(list) {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  list.forEach(unit => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    const tagsHtml = unit.tags.map(t => `<span class="tag">${t}</span>`).join('');
+    let newsHtml = '';
+    const sortedNews = unit.news.slice().sort((a, b) => {
+      if (a.sortKey && b.sortKey) return b.sortKey.localeCompare(a.sortKey);
+      if (a.sortKey && !b.sortKey) return -1;
+      if (!a.sortKey && b.sortKey) return 1;
+      return 0;
+    });
+    if (sortedNews.length === 0) {
+      newsHtml = `<div class="empty-note">${unit.note || 'Nenhuma notícia encontrada nesta busca.'}</div>`;
+    } else {
+      newsHtml = sortedNews.map(n => `
+        <div class="news-item">
+          <a href="${n.url}" target="_blank" rel="noopener">${n.title}</a>
+          <div class="news-meta">${formatDateBadge(n)}<span>${n.source}</span></div>
+        </div>
+      `).join('');
+      if (unit.note) {
+        newsHtml += `<div class="empty-note">${unit.note}</div>`;
+      }
+    }
+    card.innerHTML = `
+      <div class="card-title">${unit.unit} ${tagsHtml} <span class="count-badge">${unit.news.length} notícia(s)</span></div>
+      ${newsHtml}
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function applyFilters() {
+  const q = document.getElementById('searchBox').value.toLowerCase();
+  const sortBy = document.getElementById('sortSelect').value;
+  let filtered = DATA.filter(unit => {
+    if (!q) return true;
+    const haystack = (unit.unit + ' ' + unit.tags.join(' ') + ' ' + unit.news.map(n => n.title).join(' ')).toLowerCase();
+    return haystack.includes(q);
+  });
+  filtered = filtered.slice().sort((a, b) => {
+    if (sortBy === 'count') return b.news.length - a.news.length;
+    return a.unit.localeCompare(b.unit, 'pt-BR');
+  });
+  render(filtered);
+}
+
+document.getElementById('searchBox').addEventListener('input', applyFilters);
+document.getElementById('sortSelect').addEventListener('change', applyFilters);
+
+document.getElementById('lastUpdated').textContent = 'Última atualização: 10/07/2026 (manhã)';
+
+applyFilters();
+</script>
+
+</body>
+</html>
