@@ -8,28 +8,66 @@
   body {
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: #f7f8fa;
+    background: linear-gradient(180deg, #eef3fb 0%, #f7f8fa 260px, #f7f8fa 100%);
     color: #1f2430;
+    padding: 0;
+  }
+  .page {
+    max-width: 1400px;
+    margin: 0 auto;
     padding: 24px;
   }
-  .header {
+  .hero {
+    background: linear-gradient(120deg, #0e2c5e 0%, #1c56b0 48%, #1592a8 100%);
+    background-size: 200% 200%;
+    color: #fff;
+    padding: 26px 32px;
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
+    gap: 20px;
     flex-wrap: wrap;
-    gap: 12px;
-    margin-bottom: 20px;
+    box-shadow: 0 6px 24px rgba(15, 40, 80, 0.28);
+    position: relative;
+    overflow: hidden;
   }
-  h1 { font-size: 22px; margin: 0 0 4px 0; }
-  .subtitle { color: #5b6270; font-size: 13px; }
-  .meta {
-    font-size: 12px;
-    color: #7a8194;
+  .hero::after {
+    content: "";
+    position: absolute;
+    top: -60px;
+    right: -60px;
+    width: 240px;
+    height: 240px;
+    background: radial-gradient(circle, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0) 70%);
+    pointer-events: none;
+  }
+  .hero-logo {
+    height: 62px;
     background: #fff;
-    border: 1px solid #e3e5eb;
+    padding: 8px 14px;
+    border-radius: 10px;
+    object-fit: contain;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.18);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+  .hero-text {
+    position: relative;
+    z-index: 1;
+  }
+  .hero-text h1 { font-size: 24px; margin: 0 0 4px 0; color: #fff; }
+  .hero-text .subtitle { color: #d9e8fb; font-size: 13px; }
+  .hero .meta {
+    margin-left: auto;
+    font-size: 12px;
+    color: #fff;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.35);
     border-radius: 8px;
     padding: 8px 12px;
     white-space: nowrap;
+    position: relative;
+    z-index: 1;
   }
   .controls {
     margin-bottom: 18px;
@@ -59,12 +97,12 @@
     margin-bottom: 22px;
   }
   .region-header {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 700;
     color: #1f2430;
     margin: 0 0 12px 0;
     padding-bottom: 6px;
-    border-bottom: 2px solid #2a6df5;
+    border-bottom: 3px solid #2a6df5;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -85,12 +123,23 @@
   .card {
     background: #fff;
     border: 1px solid #e3e5eb;
+    border-top: 4px solid #2a6df5;
     border-radius: 12px;
     padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    box-shadow: 0 1px 3px rgba(20,30,60,0.06);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
   }
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(20,30,60,0.12);
+  }
+  .card[data-region="Goiás"] { border-top-color: #e08a2b; }
+  .card[data-region="São Paulo"] { border-top-color: #16a34a; }
+  .card[data-region="Goiás"] .tag { color: #b8631b; background: #fdf1e2; }
+  .card[data-region="São Paulo"] .tag { color: #127a3e; background: #e8f8ee; }
   .card-title {
     font-size: 15px;
     font-weight: 600;
@@ -192,13 +241,16 @@
 </head>
 <body>
 
-<div class="header">
-  <div>
+<div class="hero">
+  <img class="hero-logo" src="logos/Logo%20HMTJ%20%20Uniforme.png" alt="Logo HMTJ">
+  <div class="hero-text">
     <h1>Monitor de Notícias — Unidades OSSHMTJ</h1>
     <div class="subtitle">Notícias públicas encontradas na web para cada unidade gerenciada pela OSSHMTJ (HMTJ)</div>
   </div>
   <div class="meta" id="lastUpdated"></div>
 </div>
+
+<div class="page">
 
 <div class="legend">
   <span><span class="dot" style="background:#3a7d3f"></span>Data confirmada na matéria/URL</span>
@@ -217,6 +269,8 @@
 <div class="grid" id="grid"></div>
 
 <footer>Dashboard atualizado automaticamente todos os dias de manhã via tarefa agendada. Os links abrem as matérias originais nas fontes. Datas confirmadas via metadados/URL da própria matéria; datas estimadas foram inferidas do conteúdo da notícia.</footer>
+
+</div>
 
 <script>
 // dateSortKey: YYYY-MM-DD (ou "" quando não disponível) usado só para ordenação interna
@@ -410,10 +464,16 @@ function formatDateBadge(item) {
 }
 
 const REGION_ORDER = ["Juiz de Fora/MG", "Goiás", "São Paulo"];
+const REGION_COLORS = {
+  "Juiz de Fora/MG": "#2a6df5",
+  "Goiás": "#e08a2b",
+  "São Paulo": "#16a34a"
+};
 
 function buildCard(unit) {
   const card = document.createElement('div');
   card.className = 'card';
+  if (unit.region) card.setAttribute('data-region', unit.region);
   const tagsHtml = unit.tags.map(t => `<span class="tag">${t}</span>`).join('');
   let newsHtml = '';
   const sortedNews = unit.news.slice().sort((a, b) => {
@@ -461,9 +521,11 @@ function render(list) {
     const units = byRegion[region];
     const section = document.createElement('div');
     section.className = 'region-section';
+    const color = REGION_COLORS[region] || '#2a6df5';
     const header = document.createElement('div');
     header.className = 'region-header';
-    header.innerHTML = `${region} <span class="region-badge">${units.length} unidade(s)</span>`;
+    header.style.borderBottomColor = color;
+    header.innerHTML = `${region} <span class="region-badge" style="background:${color}">${units.length} unidade(s)</span>`;
     section.appendChild(header);
     const cardsGrid = document.createElement('div');
     cardsGrid.className = 'cards-grid';
